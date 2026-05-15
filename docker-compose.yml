@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: kalite-portal-web
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_USER=kalite_user
+      - DB_PASS=kalite_password
+      - DB_NAME=kalite_portal
+    depends_on:
+      - db
+    networks:
+      - kalite-network
+
+  db:
+    image: mysql:8.0
+    container_name: kalite-portal-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kalite_portal
+      MYSQL_USER: kalite_user
+      MYSQL_PASSWORD: kalite_password
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    networks:
+      - kalite-network
+    ports:
+      - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: kalite-portal-phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: kalite_user
+      PMA_PASSWORD: kalite_password
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - kalite-network
+
+volumes:
+  db_data:
+
+networks:
+  kalite-network:
+    driver: bridge

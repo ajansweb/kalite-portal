@@ -1,0 +1,17 @@
+node_modules/
+vendor/
+.env
+.env.local
+.DS_Store
+uploads/photos/*
+uploads/reports/*
+uploads/labels/*
+!uploads/photos/.gitkeep
+!uploads/reports/.gitkeep
+!uploads/labels/.gitkeep
+*.log
+.vscode/
+.idea/
+dist/
+build/
+*.phar
